@@ -258,25 +258,40 @@ void Widget::on_sizeComboBox_currentIndexChanged(const QString &arg1)
     ui->messageTextEdit->setFontPointSize(arg1.toDouble());
     ui->messageTextEdit->setFocus();
 }
-// 加粗
+
 void Widget::on_boldToolBtn_clicked(bool checked)
 {
-
+    if (checked)
+        ui->messageTextEdit->setFontWeight(QFont::Bold);
+    else
+        ui->messageTextEdit->setFontWeight(QFont::Normal);
+    ui->messageTextEdit->setFocus();
 }
-// 倾斜
+
 void Widget::on_italicToolBtn_clicked(bool checked)
 {
-
+    ui->messageTextEdit->setFontItalic(checked);
+    ui->messageTextEdit->setFocus();
 }
-// 下划线
+
 void Widget::on_underlineToolBtn_clicked(bool checked)
 {
-
+    ui->messageTextEdit->setFontUnderline(checked);
+    ui->messageTextEdit->setFocus();
 }
-// 颜色
+
+void Widget::on_colorToolBtn_clicked()
+{
+    color = QColorDialog::getColor(color, this);
+    if (color.isValid()) {
+        ui->messageTextEdit->setTextColor(color);
+        ui->messageTextEdit->setFocus();
+    }
+}
+
 void Widget::on_clearToolBtn_clicked()
 {
-
+    ui->messageBrower->clear();
 }
 
 void Widget::on_userTableWidget_doubleClicked(const QModelIndex &index)
@@ -308,10 +323,4 @@ void Widget::showXchat(QString localHostName, QString ipAddress)
 {
     if (!privateChat1)
         privateChat1 = new Chat(localHostName, ipAddress);
-}
-
-//传输文件
-void Widget::on_sendToolBtn_clicked()
-{
-
 }
