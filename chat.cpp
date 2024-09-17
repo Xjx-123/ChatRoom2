@@ -83,7 +83,55 @@ void Chat::sendMessage(messageType type, QString serverAddress)
     xchat->writeDatagram(data, data.length(), QHostAddress(xpasuserip), xport);
 }
 
+void Chat::processPendinDatagrams()
+{
+    while (xchat->hasPendingDatagrams()) {
+        QByteArray datagram;
+        datagram.resize(xchat->pendingDatagramSize());
+        xchat->readDatagram(datagram.data(), datagram.size());
 
+        QDataStream in(&datagram, QIODevice::ReadOnly);
+        int messageType;
+        in >> messageType;
+        QString userName, localHostName, ipAddress, messagestr;
+
+        qDebug() << "num2:" << ++num2 << "ipAddress:" << ipAddress;
+        QString time = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss");
+        switch (messageType) {
+        case Xchat:
+            break;
+        case Message: {
+            ui->label->setText(tr("与%1私聊中 对方的IP：%2").arg(xpasusername).arg(xpasuserip));
+            in >> userName >> localHostName >> ipAddress >> messagestr;
+            ui->textBrowser->setTextColor(Qt::blue);
+            ui->textBrowser->setCurrentFont(QFont("Times New Roman", 12));
+            ui->textBrowser->append("[ " + localHostName + " ]" + time);
+            qDebug() << "messagestr:" << messagestr;
+            ui->textBrowser->append(messagestr);
+            this->show();
+            is_opend = true;
+            break;
+        }
+        case Refuse: {
+            in >> userName >> localHostName;
+            QString serverAddress;
+            in >> serverAddress;
+            if (getIp() == serverAddress) {
+                // server->refused(); // 移除了文件传输相关部分
+            }
+            break;
+        }
+        case LeftParticipant: {
+            in >> userName >> localHostName;
+            userLeft(userName, localHostName, time);
+            ui->~Chat();
+            break;
+        }
+        default:
+            break;
+        }
+    }
+}
 
 QString Chat::getMessage()
 {

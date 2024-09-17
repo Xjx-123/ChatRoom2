@@ -35,6 +35,7 @@ SOURCES += main.cpp\
     chat.cpp
 
 HEADERS  += widget.h \
+    tcpclient.h \
     chat.h
 
 FORMS    += widget.ui \

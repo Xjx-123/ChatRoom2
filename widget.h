@@ -77,16 +77,6 @@ private slots:
 
     void on_userTableWidget_doubleClicked(const QModelIndex &index);
 
-    void on_sendToolBtn_triggered(QAction *arg1);
-
-    void on_italicToolBtn_triggered(QAction *arg1);
-
-    void on_clearToolBtn_triggered(QAction *arg1);
-
-    void on_sendToolBtn_clicked();
-
-    void on_italicToolBtn_clicked();
-
 private:
     Ui::Widget *ui;
 
